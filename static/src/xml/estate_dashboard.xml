@@ -2,13 +2,15 @@
 <templates xml:space="preserve">
     <t t-name="estate.Dashboard" owl="1">
         <div class="o_estate_dashboard p-4">
-            <h1>Métricas de Inmuebles en Tiempo Real</h1>
+            <h1 class="mb-4">Métricas de Inmuebles en Tiempo Real</h1>
             
             <div class="row mt-4">
                 <!-- Tarjeta de Propiedades Vendidas -->
                 <div class="col-md-4">
                     <div class="card text-white bg-success mb-3 shadow-sm">
-                        <div class="card-header"><i class="fa fa-money"/> Propiedades Vendidas</div>
+                        <div class="card-header">
+                            <i class="fa fa-money-bill-wave me-2"></i> Propiedades Vendidas
+                        </div>
                         <div class="card-body">
                             <h1 class="card-title display-4 text-center">
                                 <t t-esc="state.soldProperties"/>
@@ -20,7 +22,9 @@
                 <!-- Tarjeta de Propiedades Nuevas -->
                 <div class="col-md-4">
                     <div class="card text-white bg-primary mb-3 shadow-sm">
-                        <div class="card-header"><i class="fa-solid fa-ban"></i> Nuevos Ingresos</div>
+                        <div class="card-header">
+                            <i class="fa fa-building me-2"></i> Nuevos Ingresos
+                        </div>
                         <div class="card-body">
                             <h1 class="card-title display-4 text-center">
                                 <t t-esc="state.newProperties"/>
@@ -32,7 +36,9 @@
                 <!-- Tarjeta de Propiedades Canceladas -->
                 <div class="col-md-4">
                     <div class="card text-white bg-dark mb-3 shadow-sm">
-                        <div class="card-header"><i class="fa fa-xmark"/> Propiedades Canceladas</div>
+                        <div class="card-header">
+                            <i class="fa fa-trash-alt me-2"></i> Propiedades Canceladas
+                        </div>
                         <div class="card-body">
                             <h1 class="card-title display-4 text-center">
                                 <t t-esc="state.canceledProperties"/>
@@ -43,9 +49,11 @@
             </div>
 
             <!-- Botón conectado a la nueva función de refresco -->
-            <button class="btn btn-secondary mt-3" t-on-click="refreshDashboard">
-                <i class="fa fa-refresh"/> Actualizar Datos
-            </button>
+            <div class="mt-3">
+                <button class="btn btn-secondary shadow-sm" t-on-click="refreshDashboard">
+                    <i class="fa fa-sync-alt me-1"></i> Actualizar Datos
+                </button>
+            </div>
         </div>
     </t>
 </templates>
