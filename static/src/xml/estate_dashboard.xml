@@ -20,7 +20,7 @@
                 <!-- Tarjeta de Propiedades Nuevas -->
                 <div class="col-md-4">
                     <div class="card text-white bg-primary mb-3 shadow-sm">
-                        <div class="card-header"><i class="fa fa-star"/> Nuevos Ingresos</div>
+                        <div class="card-header"><i class="fa-solid fa-ban"></i> Nuevos Ingresos</div>
                         <div class="card-body">
                             <h1 class="card-title display-4 text-center">
                                 <t t-esc="state.newProperties"/>
