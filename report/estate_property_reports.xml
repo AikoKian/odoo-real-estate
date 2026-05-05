@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. La Acción: Le dice a Odoo que agregue el botón "Imprimir" -->
+    <record id="action_report_estate_property" model="ir.actions.report">
+        <field name="name">Property Brochure</field>
+        <field name="model">estate.property</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">estate.report_property_offers</field>
+        <field name="report_file">estate.report_property_offers</field>
+        <field name="binding_model_id" ref="model_estate_property"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- 2. La Plantilla QWeb: El diseño del PDF en HTML -->
+    <template id="report_property_offers">
+        <!-- html_container es la estructura base de Odoo para el PDF -->
+        <t t-call="web.html_container">
+            <!-- Iteramos sobre "docs" (las propiedades que seleccionaste para imprimir) -->
+            <t t-foreach="docs" t-as="property">
+                <!-- external_layout agrega el encabezado y pie de página de la empresa -->
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>
+                            <!-- Imprimimos el nombre de la propiedad -->
+                            <span t-field="property.name"/>
+                        </h2>
+                        
+                        <div>
+                            <strong>Expected Price: </strong>
+                            <span t-field="property.expected_price"/>
+                        </div>
+                        <div>
+                            <strong>Status: </strong>
+                            <span t-field="property.state"/>
+                        </div>
+
+                        <br/>
+                        <t t-if="property.offer_ids">
+                            <h4>Offers</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Price</th>
+                                        <th>Partner</th>
+                                        <th>Validity (Days)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Un bucle for dentro del HTML para las ofertas -->
+                                    <t t-foreach="property.offer_ids" t-as="offer">
+                                        <tr>
+                                            <td><span t-field="offer.price"/></td>
+                                            <td><span t-field="offer.partner_id.name"/></td>
+                                            <td><span t-field="offer.validity"/></td>
+                                            <td><span t-field="offer.status"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p>No offers have been received for this property yet.</p>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

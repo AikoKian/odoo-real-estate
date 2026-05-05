@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="estate.Dashboard" owl="1">
+        <div class="o_estate_dashboard p-4">
+            <h1>Métricas de Inmuebles en Tiempo Real</h1>
+            
+            <div class="row mt-4">
+                <!-- Tarjeta de Propiedades Vendidas -->
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3 shadow-sm">
+                        <div class="card-header"><i class="fa fa-money"/> Propiedades Vendidas</div>
+                        <div class="card-body">
+                            <h1 class="card-title display-4 text-center">
+                                <t t-esc="state.soldProperties"/>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Propiedades Nuevas -->
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3 shadow-sm">
+                        <div class="card-header"><i class="fa fa-star"/> Nuevos Ingresos</div>
+                        <div class="card-body">
+                            <h1 class="card-title display-4 text-center">
+                                <t t-esc="state.newProperties"/>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Propiedades Canceladas -->
+                <div class="col-md-4">
+                    <div class="card text-white bg-dark mb-3 shadow-sm">
+                        <div class="card-header"><i class="fa fa-star"/> Propiedades Canceladas</div>
+                        <div class="card-body">
+                            <h1 class="card-title display-4 text-center">
+                                <t t-esc="state.canceledProperties"/>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón conectado a la nueva función de refresco -->
+            <button class="btn btn-secondary mt-3" t-on-click="refreshDashboard">
+                <i class="fa fa-refresh"/> Actualizar Datos
+            </button>
+        </div>
+    </t>
+</templates>

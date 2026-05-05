@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categoría de la aplicación -->
+    <record model="ir.module.category" id="module_category_real_estate">
+        <field name="name">Real Estate</field>
+        <field name="description">Manage real estate properties.</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- Grupo Nivel 1: Agente -->
+    <record id="group_estate_agent" model="res.groups">
+        <field name="name">Agent</field>
+        <field name="category_id" ref="module_category_real_estate"/>
+        <!-- Hereda los permisos básicos de un empleado interno -->
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Grupo Nivel 2: Administrador -->
+    <record id="group_estate_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_real_estate"/>
+        <!-- Un administrador hereda automáticamente todos los permisos de un Agente -->
+        <field name="implied_ids" eval="[(4, ref('estate.group_estate_agent'))]"/>
+        <!-- NUEVO: Asignar automáticamente este grupo a los administradores del sistema -->
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>
