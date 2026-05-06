@@ -1,47 +1,77 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks"; // Importamos el gestor de servicios de Odoo
-import { Component, useState, onWillStart } from "@odoo/owl"; // Importamos onWillStart
+import { useService } from "@web/core/utils/hooks";
+import { Component, onWillStart, onMounted, useState, useRef } from "@odoo/owl";
+// 1. IMPORTAMOS LA FUNCIÓN PARA CARGAR LIBRERÍAS EXTERNAS
+import { loadJS } from "@web/core/assets";
 
 export class EstateDashboard extends Component {
     setup() {
-        // Inicializamos nuestro estado reactivo
+        this.orm = useService("orm");
+        this.chartRef = useRef("chartCanvas");
+        this.chartInstance = null;
+
         this.state = useState({
             soldProperties: 0,
             newProperties: 0,
-            canceledProperties: 0
+            canceledProperties: 0,
         });
-        
-        // Instanciamos el servicio ORM para hablar con la base de datos
-        this.orm = useService("orm");
 
-        // onWillStart se ejecuta ANTES de que se dibuje la pantalla
         onWillStart(async () => {
+            // 2. DESCARGAMOS CHART.JS ANTES DE HACER CUALQUIER OTRA COSA
+            await loadJS("/web/static/lib/Chart/Chart.js");
             await this.fetchData();
+        });
+
+        onMounted(() => {
+            this.renderChart();
         });
     }
 
-    // Función asíncrona para buscar los datos reales
     async fetchData() {
-        // Realizamos una única llamada al método que creamos en Python
-        const stats = await this.orm.call(
-            "estate.property", 
-            "get_dashboard_stats", 
-            []
-        );
-
-        // Asignamos los valores recibidos al estado reactivo
+        const stats = await this.orm.call("estate.property", "get_dashboard_stats", []);
         this.state.soldProperties = stats.sold;
         this.state.newProperties = stats.new;
         this.state.canceledProperties = stats.canceled;
     }
 
-    // Botón para refrescar los datos manualmente sin recargar la página
     async refreshDashboard() {
         await this.fetchData();
+        this.renderChart();
+    }
+
+    renderChart() {
+        if (this.chartInstance) {
+            this.chartInstance.destroy();
+        }
+        
+        if (!this.chartRef.el) return; 
+
+        const ctx = this.chartRef.el.getContext('2d');
+        
+        // Ahora window.Chart sí existirá gracias a loadJS
+        this.chartInstance = new window.Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vendidas', 'Nuevas', 'Canceladas'],
+                datasets: [{
+                    data: [this.state.soldProperties, this.state.newProperties, this.state.canceledProperties],
+                    backgroundColor: ['#198754', '#690dfd', '#212529'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
     }
 }
 
 EstateDashboard.template = "estate.Dashboard";
+
 registry.category("actions").add("estate.dashboard_action", EstateDashboard);
