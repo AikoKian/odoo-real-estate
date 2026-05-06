@@ -6,7 +6,6 @@ class EstateProperty(models.Model):
     # _name es el identificador único del modelo en Odoo
     _name = "estate.property"
     _description = "Real Estate Property"
-    _inherit = "estate.property"
 
     # Campos de la base de datos
     name = fields.Char(required=True)
