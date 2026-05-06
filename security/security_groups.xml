@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Categoría para agrupar nuestros roles en el menú de configuración -->
+        <record id="module_category_real_estate" model="ir.module.category">
+            <field name="name">Real Estate</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Grupo: Agente Inmobiliario -->
+        <record id="group_estate_agent" model="res.groups">
+            <field name="name">Agente</field>
+            <field name="category_id" ref="module_category_real_estate"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Grupo: Gerente Inmobiliario -->
+        <record id="group_estate_manager" model="res.groups">
+            <field name="name">Gerente</field>
+            <field name="category_id" ref="module_category_real_estate"/>
+            <!-- El gerente hereda todos los permisos del agente -->
+            <field name="implied_ids" eval="[(4, ref('group_estate_agent'))]"/>
+        </record>
+    </data>
+</odoo>
