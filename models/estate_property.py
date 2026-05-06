@@ -6,6 +6,7 @@ class EstateProperty(models.Model):
     # _name es el identificador único del modelo en Odoo
     _name = "estate.property"
     _description = "Real Estate Property"
+    _inherit = "estate.property"
 
     # Campos de la base de datos
     name = fields.Char(required=True)
@@ -116,3 +117,15 @@ class EstateProperty(models.Model):
                 # Comparamos si el precio de veneta es menor al minimo aceptable
                 if float_compare(record.selling_price, minimun_price, precision_digits=2) < 0:
                     raise ValidationError("The selling price cannot be lower tha 90'%' of the expected price.")
+                
+    @api.model
+    def get_dashboard_stats(self):
+        """
+        Calcula las métricas principales en una sola consulta al servidor.
+        Retorna un diccionario con los conteos por estado.
+        """
+        return {
+            'sold': self.search_count([('state', '=', 'sold')]),
+            'new': self.search_count([('state', '=', 'new')]),
+            'canceled': self.search_count([('state', '=', 'canceled')]),
+        }

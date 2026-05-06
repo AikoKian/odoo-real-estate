@@ -24,10 +24,17 @@ export class EstateDashboard extends Component {
 
     // Función asíncrona para buscar los datos reales
     async fetchData() {
-        // Hacemos un search_count nativo al modelo estate.property
-        this.state.soldProperties = await this.orm.searchCount("estate.property", [["state", "=", "sold"]]);
-        this.state.newProperties = await this.orm.searchCount("estate.property", [["state", "=", "new"]]);
-        this.state.canceledProperties = await this.orm.searchCount("estate.property", [["state", "=", "canceled"]])
+        // Realizamos una única llamada al método que creamos en Python
+        const stats = await this.orm.call(
+            "estate.property", 
+            "get_dashboard_stats", 
+            []
+        );
+
+        // Asignamos los valores recibidos al estado reactivo
+        this.state.soldProperties = stats.sold;
+        this.state.newProperties = stats.new;
+        this.state.canceledProperties = stats.canceled;
     }
 
     // Botón para refrescar los datos manualmente sin recargar la página
